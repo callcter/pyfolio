@@ -889,8 +889,9 @@ def get_max_drawdown_underwater(underwater):
     recovery : datetime
         The maximum drawdown's recovery.
     """
-
+    
     valley = np.argmin(underwater)  # end of the period
+    # print(valley)
     # Find first 0
     peak = underwater[:valley][underwater[:valley] == 0].index[-1]
     # Find last 0
@@ -898,6 +899,11 @@ def get_max_drawdown_underwater(underwater):
         recovery = underwater[valley:][underwater[valley:] == 0].index[0]
     except IndexError:
         recovery = np.nan  # drawdown not recovered
+    # print("get_max_drawdown_underwater",underwater)
+    # print("get_max_drawdown_underwater",underwater[:valley][underwater[:valley] == 0])
+    # print("get_max_drawdown_underwater",peak, valley, recovery)
+    # add a code,change index to datetime
+    valley = list(underwater.index)[valley]
     return peak, valley, recovery
 
 
@@ -961,7 +967,7 @@ def get_top_drawdowns(returns, top=10):
         else:
             # drawdown has not ended yet
             underwater = underwater.loc[:peak]
-
+        # print("get_top_drawdowns",peak, valley, recovery)
         drawdowns.append((peak, valley, recovery))
         if (len(returns) == 0) or (len(underwater) == 0):
             break
@@ -995,7 +1001,8 @@ def gen_drawdown_table(returns, top=10):
                                          'Valley date',
                                          'Recovery date',
                                          'Duration'])
-
+    # print(df_drawdowns)
+    # print(drawdown_periods)
     for i, (peak, valley, recovery) in enumerate(drawdown_periods):
         if pd.isnull(recovery):
             df_drawdowns.loc[i, 'Duration'] = np.nan
@@ -1003,23 +1010,32 @@ def gen_drawdown_table(returns, top=10):
             df_drawdowns.loc[i, 'Duration'] = len(pd.date_range(peak,
                                                                 recovery,
                                                                 freq='B'))
-        df_drawdowns.loc[i, 'Peak date'] = (peak.to_pydatetime()
-                                            .strftime('%Y-%m-%d'))
-        df_drawdowns.loc[i, 'Valley date'] = (valley.to_pydatetime()
-                                              .strftime('%Y-%m-%d'))
+        # to_pydatetime()疑似是老的API，使用pd.to_datetime替代
+        # df_drawdowns.loc[i, 'Peak date'] = (peak.to_pydatetime()
+        #                                     .strftime('%Y-%m-%d'))
+        # df_drawdowns.loc[i, 'Valley date'] = (valley.to_pydatetime()
+        #                                       .strftime('%Y-%m-%d'))
+        # if isinstance(recovery, float):
+        #     df_drawdowns.loc[i, 'Recovery date'] = recovery
+        # else:
+        #     df_drawdowns.loc[i, 'Recovery date'] = (recovery.to_pydatetime()
+        #                                             .strftime('%Y-%m-%d'))
+        
+        df_drawdowns.loc[i, 'Peak date'] = (pd.to_datetime(peak).strftime('%Y-%m-%d'))
+        df_drawdowns.loc[i, 'Valley date'] = (pd.to_datetime(valley).strftime('%Y-%m-%d'))
+
         if isinstance(recovery, float):
             df_drawdowns.loc[i, 'Recovery date'] = recovery
         else:
-            df_drawdowns.loc[i, 'Recovery date'] = (recovery.to_pydatetime()
-                                                    .strftime('%Y-%m-%d'))
+            df_drawdowns.loc[i, 'Recovery date'] = (pd.to_datetime(peak).strftime('%Y-%m-%d'))
+                                                    
         df_drawdowns.loc[i, 'Net drawdown in %'] = (
             (df_cum.loc[peak] - df_cum.loc[valley]) / df_cum.loc[peak]) * 100
 
     df_drawdowns['Peak date'] = pd.to_datetime(df_drawdowns['Peak date'])
     df_drawdowns['Valley date'] = pd.to_datetime(df_drawdowns['Valley date'])
-    df_drawdowns['Recovery date'] = pd.to_datetime(
-        df_drawdowns['Recovery date'])
-
+    df_drawdowns['Recovery date'] = pd.to_datetime(df_drawdowns['Recovery date'])
+    
     return df_drawdowns
 
 
