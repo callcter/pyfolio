@@ -1148,8 +1148,7 @@ def show_and_plot_top_positions(returns, positions_alloc,
     positions_alloc = positions_alloc.copy()
     positions_alloc.columns = positions_alloc.columns.map(utils.format_asset)
 
-    df_top_long, df_top_short, df_top_abs = pos.get_top_long_short_abs(
-        positions_alloc)
+    df_top_long, df_top_short, df_top_abs = pos.get_top_long_short_abs(positions_alloc)
 
     if show_and_plot == 1 or show_and_plot == 2:
         utils.print_table(pd.DataFrame(df_top_long * 100, columns=['max']),
@@ -1543,7 +1542,7 @@ def plot_daily_turnover_hist(transactions, positions,
     if ax is None:
         ax = plt.gca()
     turnover = txn.get_turnover(positions, transactions)
-    sns.distplot(turnover, ax=ax, **kwargs)
+    sns.histplot(turnover, ax=ax, **kwargs)
     ax.set_title('Distribution of daily turnover rates')
     ax.set_xlabel('Turnover rate')
     return ax
@@ -1662,6 +1661,9 @@ def show_worst_drawdown_periods(returns, top=5):
     """
 
     drawdown_df = timeseries.gen_drawdown_table(returns, top=top)
+    # drawdown_df['Peak date'] = drawdown_df['Peak date'].apply(lambda x:x.strftime('%Y-%m-%d') if pd.notna(x) else '--')
+    # drawdown_df['Valley date'] = drawdown_df['Valley date'].apply(lambda x:x.strftime('%Y-%m-%d') if pd.notna(x) else '--')
+    # drawdown_df['Recovery date'] = drawdown_df['Recovery date'].apply(lambda x:x.strftime('%Y-%m-%d') if pd.notna(x) else '--')
     utils.print_table(
         drawdown_df.sort_values('Net drawdown in %', ascending=False),
         name='Worst drawdown periods',
@@ -1758,6 +1760,7 @@ def plot_round_trip_lifetimes(round_trips, disp_amount=16, lsize=18, ax=None):
         for _, row in sym_round_trips.iterrows():
             c = 'b' if row.long else 'r'
             y_ix = symbol_idx[symbol] + 0.05
+            pd.plotting.register_matplotlib_converters()
             ax.plot([row['open_dt'], row['close_dt']],
                     [y_ix, y_ix], color=c,
                     linewidth=lsize, solid_capstyle='butt')

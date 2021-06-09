@@ -1020,7 +1020,7 @@ def gen_drawdown_table(returns, top=10):
         # else:
         #     df_drawdowns.loc[i, 'Recovery date'] = (recovery.to_pydatetime()
         #                                             .strftime('%Y-%m-%d'))
-        
+
         df_drawdowns.loc[i, 'Peak date'] = (pd.to_datetime(peak).strftime('%Y-%m-%d'))
         df_drawdowns.loc[i, 'Valley date'] = (pd.to_datetime(valley).strftime('%Y-%m-%d'))
 
@@ -1028,14 +1028,14 @@ def gen_drawdown_table(returns, top=10):
             df_drawdowns.loc[i, 'Recovery date'] = recovery
         else:
             df_drawdowns.loc[i, 'Recovery date'] = (pd.to_datetime(peak).strftime('%Y-%m-%d'))
-                                                    
+
         df_drawdowns.loc[i, 'Net drawdown in %'] = (
             (df_cum.loc[peak] - df_cum.loc[valley]) / df_cum.loc[peak]) * 100
 
     df_drawdowns['Peak date'] = pd.to_datetime(df_drawdowns['Peak date'])
     df_drawdowns['Valley date'] = pd.to_datetime(df_drawdowns['Valley date'])
     df_drawdowns['Recovery date'] = pd.to_datetime(df_drawdowns['Recovery date'])
-    
+
     return df_drawdowns
 
 
@@ -1238,9 +1238,11 @@ def extract_interesting_date_ranges(returns):
     returns_dupe = returns.copy()
     returns_dupe.index = returns_dupe.index.map(pd.Timestamp)
     ranges = OrderedDict()
+    print(returns_dupe)
     for name, (start, end) in PERIODS.items():
         try:
             period = returns_dupe.loc[start:end]
+            print(period)
             if len(period) == 0:
                 continue
             ranges[name] = period

@@ -294,7 +294,7 @@ def plot_best(trace=None, data_train=None, data_test=None,
         fig, axs = plt.subplots(ncols=2, nrows=3, figsize=(16, 4))
 
     def distplot_w_perc(trace, ax):
-        sns.distplot(trace, ax=ax)
+        sns.histplot(trace, ax=ax)
         ax.axvline(
             stats.scoreatpercentile(trace, 2.5),
             color='0.5', label='2.5 and 97.5 percentiles')
@@ -302,8 +302,8 @@ def plot_best(trace=None, data_train=None, data_test=None,
             stats.scoreatpercentile(trace, 97.5),
             color='0.5')
 
-    sns.distplot(trace['group1_mean'], ax=axs[0], label='Backtest')
-    sns.distplot(trace['group2_mean'], ax=axs[0], label='Forward')
+    sns.histplot(trace['group1_mean'], ax=axs[0], label='Backtest')
+    sns.histplot(trace['group2_mean'], ax=axs[0], label='Forward')
     axs[0].legend(loc=0, frameon=True, framealpha=0.5)
     axs[1].legend(loc=0, frameon=True, framealpha=0.5)
 
@@ -312,9 +312,9 @@ def plot_best(trace=None, data_train=None, data_test=None,
     axs[0].set(xlabel='Mean', ylabel='Belief', yticklabels=[])
     axs[1].set(xlabel='Difference of means', yticklabels=[])
 
-    sns.distplot(trace['group1_annual_volatility'], ax=axs[2],
+    sns.histplot(trace['group1_annual_volatility'], ax=axs[2],
                  label='Backtest')
-    sns.distplot(trace['group2_annual_volatility'], ax=axs[2],
+    sns.histplot(trace['group2_annual_volatility'], ax=axs[2],
                  label='Forward')
     distplot_w_perc(trace['group2_annual_volatility'] -
                     trace['group1_annual_volatility'], axs[3])
@@ -323,15 +323,15 @@ def plot_best(trace=None, data_train=None, data_test=None,
     axs[2].legend(loc=0, frameon=True, framealpha=0.5)
     axs[3].set(xlabel='Difference of volatility', yticklabels=[])
 
-    sns.distplot(trace['group1_sharpe'], ax=axs[4], label='Backtest')
-    sns.distplot(trace['group2_sharpe'], ax=axs[4], label='Forward')
+    sns.histplot(trace['group1_sharpe'], ax=axs[4], label='Backtest')
+    sns.histplot(trace['group2_sharpe'], ax=axs[4], label='Forward')
     distplot_w_perc(trace['group2_sharpe'] - trace['group1_sharpe'],
                     axs[5])
     axs[4].set(xlabel='Sharpe', ylabel='Belief', yticklabels=[])
     axs[4].legend(loc=0, frameon=True, framealpha=0.5)
     axs[5].set(xlabel='Difference of Sharpes', yticklabels=[])
 
-    sns.distplot(trace['effect size'], ax=axs[6])
+    sns.histplot(trace['effect size'], ax=axs[6])
     axs[6].axvline(
         stats.scoreatpercentile(trace['effect size'], 2.5),
         color='0.5')

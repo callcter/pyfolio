@@ -873,14 +873,13 @@ def create_round_trip_tear_sheet(returns, positions, transactions,
     plotting.plot_prob_profit_trade(trades, ax=ax_prob_profit_trade)
 
     trade_holding_times = [x.days for x in trades['duration']]
-    sns.distplot(trade_holding_times, kde=False, ax=ax_holding_time)
+    sns.histplot(trade_holding_times, kde=False, ax=ax_holding_time)
     ax_holding_time.set(xlabel='Holding time in days')
 
-    sns.distplot(trades.pnl, kde=False, ax=ax_pnl_per_round_trip_dollars)
+    sns.histplot(trades.pnl, kde=False, ax=ax_pnl_per_round_trip_dollars)
     ax_pnl_per_round_trip_dollars.set(xlabel='PnL per round-trip trade in $')
 
-    sns.distplot(trades.returns.dropna() * 100, kde=False,
-                 ax=ax_pnl_per_round_trip_pct)
+    sns.histplot(trades.returns.dropna() * 100, kde=False, ax=ax_pnl_per_round_trip_pct)
     ax_pnl_per_round_trip_pct.set(
         xlabel='Round-trip returns in %')
 
@@ -1181,9 +1180,7 @@ def create_bayesian_tear_sheet(returns, benchmark_rets=None,
     ax_ret_pred_week = plt.subplot(gs[row, 1])
     day_pred = ppc_t[:, 0]
     p5 = scipy.stats.scoreatpercentile(day_pred, 5)
-    sns.distplot(day_pred,
-                 ax=ax_ret_pred_day
-                 )
+    sns.histplot(day_pred, ax=ax_ret_pred_day)
     ax_ret_pred_day.axvline(p5, linestyle='--', linewidth=3.)
     ax_ret_pred_day.set_xlabel('Predicted returns 1 day')
     ax_ret_pred_day.set_ylabel('Frequency')
@@ -1197,9 +1194,7 @@ def create_bayesian_tear_sheet(returns, benchmark_rets=None,
     week_pred = (
         np.cumprod(ppc_t[:, :5] + 1, 1) - 1)[:, -1]
     p5 = scipy.stats.scoreatpercentile(week_pred, 5)
-    sns.distplot(week_pred,
-                 ax=ax_ret_pred_week
-                 )
+    sns.histplot(week_pred, ax=ax_ret_pred_week)
     ax_ret_pred_week.axvline(p5, linestyle='--', linewidth=3.)
     ax_ret_pred_week.set_xlabel('Predicted cum returns 5 days')
     ax_ret_pred_week.set_ylabel('Frequency')
@@ -1223,9 +1218,8 @@ def create_bayesian_tear_sheet(returns, benchmark_rets=None,
         row += 1
         ax_alpha = plt.subplot(gs[row, 0])
         ax_beta = plt.subplot(gs[row, 1])
-        sns.distplot((1 + trace_alpha_beta['alpha'][100:])**252 - 1,
-                     ax=ax_alpha)
-        sns.distplot(trace_alpha_beta['beta'][100:], ax=ax_beta)
+        sns.histplot((1 + trace_alpha_beta['alpha'][100:])**252 - 1, ax=ax_alpha)
+        sns.histplot(trace_alpha_beta['beta'][100:], ax=ax_beta)
         ax_alpha.set_xlabel('Annual Alpha')
         ax_alpha.set_ylabel('Belief')
         ax_beta.set_xlabel('Beta')
