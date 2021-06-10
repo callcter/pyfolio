@@ -1238,11 +1238,9 @@ def extract_interesting_date_ranges(returns):
     returns_dupe = returns.copy()
     returns_dupe.index = returns_dupe.index.map(pd.Timestamp)
     ranges = OrderedDict()
-    print(returns_dupe)
     for name, (start, end) in PERIODS.items():
         try:
             period = returns_dupe.loc[start:end]
-            print(period)
             if len(period) == 0:
                 continue
             ranges[name] = period

@@ -28,8 +28,8 @@ import empyrical.utils
 from . import pos
 from . import txn
 
-APPROX_BDAYS_PER_MONTH = 21
-APPROX_BDAYS_PER_YEAR = 252
+APPROX_BDAYS_PER_MONTH = 20  # 21
+APPROX_BDAYS_PER_YEAR = 243  # 252
 
 MONTHS_PER_YEAR = 12
 WEEKS_PER_YEAR = 52

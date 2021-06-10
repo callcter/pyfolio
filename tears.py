@@ -198,7 +198,7 @@ def create_full_tear_sheet(returns,
     positions = utils.check_intraday(estimate_intraday, returns,
                                      positions, transactions)
 
-    create_returns_tear_sheet(
+    res = create_returns_tear_sheet(
         returns,
         positions=positions,
         transactions=transactions,
@@ -209,6 +209,8 @@ def create_full_tear_sheet(returns,
         turnover_denom=turnover_denom,
         header_rows=header_rows,
         set_context=set_context)
+
+    return res
 
     create_interesting_times_tear_sheet(returns,
                                         benchmark_rets=benchmark_rets,
@@ -493,7 +495,7 @@ def create_returns_tear_sheet(returns, positions=None,
     if benchmark_rets is not None:
         returns = utils.clip_returns_to_benchmark(returns, benchmark_rets)
 
-    plotting.show_perf_stats(returns, benchmark_rets,
+    indices = plotting.show_perf_stats(returns, benchmark_rets,
                              positions=positions,
                              transactions=transactions,
                              turnover_denom=turnover_denom,
@@ -501,7 +503,12 @@ def create_returns_tear_sheet(returns, positions=None,
                              live_start_date=live_start_date,
                              header_rows=header_rows)
 
-    plotting.show_worst_drawdown_periods(returns)
+    drawdowns = plotting.show_worst_drawdown_periods(returns)
+
+    return {
+        'indices': indices,
+        'drawdowns': drawdowns
+    }
 
     vertical_sections = 11
 

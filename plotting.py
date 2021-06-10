@@ -592,8 +592,8 @@ def show_perf_stats(returns, factor_returns=None, positions=None,
 
     date_rows = OrderedDict()
     if len(returns.index) > 0:
-        date_rows['Start date'] = returns.index[0].strftime('%Y-%m-%d')
-        date_rows['End date'] = returns.index[-1].strftime('%Y-%m-%d')
+        date_rows['开始日期'] = returns.index[0].strftime('%Y-%m-%d')
+        date_rows['结束日期'] = returns.index[-1].strftime('%Y-%m-%d')
 
     if live_start_date is not None:
         live_start_date = ep.utils.get_utc_timestamp(live_start_date)
@@ -640,7 +640,7 @@ def show_perf_stats(returns, factor_returns=None, positions=None,
         ]), axis=1)
     else:
         if len(returns.index) > 0:
-            date_rows['Total months'] = int(len(returns) /
+            date_rows['交易月数'] = int(len(returns) /
                                             APPROX_BDAYS_PER_MONTH)
         perf_stats = pd.DataFrame(perf_stats_all, columns=['Backtest'])
 
@@ -660,6 +660,8 @@ def show_perf_stats(returns, factor_returns=None, positions=None,
         float_format='{0:.2f}'.format,
         header_rows=header_rows,
     )
+
+    return perf_stats
 
 
 def plot_returns(returns,
@@ -1664,11 +1666,15 @@ def show_worst_drawdown_periods(returns, top=5):
     # drawdown_df['Peak date'] = drawdown_df['Peak date'].apply(lambda x:x.strftime('%Y-%m-%d') if pd.notna(x) else '--')
     # drawdown_df['Valley date'] = drawdown_df['Valley date'].apply(lambda x:x.strftime('%Y-%m-%d') if pd.notna(x) else '--')
     # drawdown_df['Recovery date'] = drawdown_df['Recovery date'].apply(lambda x:x.strftime('%Y-%m-%d') if pd.notna(x) else '--')
+    sorted_list = drawdown_df.sort_values('Net drawdown in %', ascending=False)
+
     utils.print_table(
-        drawdown_df.sort_values('Net drawdown in %', ascending=False),
+        sorted_list,
         name='Worst drawdown periods',
         float_format='{0:.2f}'.format,
     )
+
+    return sorted_list
 
 
 def plot_monthly_returns_timeseries(returns, ax=None, **kwargs):
