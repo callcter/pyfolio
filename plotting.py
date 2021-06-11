@@ -592,8 +592,8 @@ def show_perf_stats(returns, factor_returns=None, positions=None,
 
     date_rows = OrderedDict()
     if len(returns.index) > 0:
-        date_rows['开始日期'] = returns.index[0].strftime('%Y-%m-%d')
-        date_rows['结束日期'] = returns.index[-1].strftime('%Y-%m-%d')
+        date_rows['Start date'] = returns.index[0].strftime('%Y-%m-%d')
+        date_rows['End date'] = returns.index[-1].strftime('%Y-%m-%d')
 
     if live_start_date is not None:
         live_start_date = ep.utils.get_utc_timestamp(live_start_date)
@@ -640,7 +640,7 @@ def show_perf_stats(returns, factor_returns=None, positions=None,
         ]), axis=1)
     else:
         if len(returns.index) > 0:
-            date_rows['交易月数'] = int(len(returns) /
+            date_rows['Total months'] = int(len(returns) /
                                             APPROX_BDAYS_PER_MONTH)
         perf_stats = pd.DataFrame(perf_stats_all, columns=['Backtest'])
 

@@ -210,8 +210,6 @@ def create_full_tear_sheet(returns,
         header_rows=header_rows,
         set_context=set_context)
 
-    return res
-
     create_interesting_times_tear_sheet(returns,
                                         benchmark_rets=benchmark_rets,
                                         set_context=set_context)
@@ -258,6 +256,8 @@ def create_full_tear_sheet(returns,
                                    live_start_date=live_start_date,
                                    benchmark_rets=benchmark_rets,
                                    set_context=set_context)
+
+    return res
 
 
 @plotting.customize
@@ -505,11 +505,6 @@ def create_returns_tear_sheet(returns, positions=None,
 
     drawdowns = plotting.show_worst_drawdown_periods(returns)
 
-    return {
-        'indices': indices,
-        'drawdowns': drawdowns
-    }
-
     vertical_sections = 11
 
     if live_start_date is not None:
@@ -630,6 +625,11 @@ def create_returns_tear_sheet(returns, positions=None,
 
     if return_fig:
         return fig
+
+    return {
+        'indices': indices,
+        'drawdowns': drawdowns
+    }
 
 
 @plotting.customize
